@@ -63,7 +63,7 @@ La aplicación cubre el ciclo funcional completo, desde el catálogo hasta el ca
 
 1.  **Clonar el repositorio:**
     ```bash
-    git clone [https://aws.amazon.com/es/what-is/repo/](https://aws.amazon.com/es/what-is/repo/)
+    git clone https://github.com/daniecj16/MercApp.git
     cd mercapp
     ```
 
