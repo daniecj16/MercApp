@@ -1,75 +1,94 @@
 <template>
-  <div class="about">
-    <h2>Acerca de MercApp</h2>
-    
-    <p class="project-info">
-      Esta es una aplicación de demostración de un catálogo de productos 
-      implementada con Vue 3 (Frontend) y un API REST basada en Node.js/Express (Backend).
-    </p>
-    
-    <div class="features">
-      <h3>Funcionalidades Clave:</h3>
-      <ul>
-        <li>Catálogo interactivo con filtros y búsqueda (Tarea 6).</li>
-        <li>Gestión de estado del carrito persistente con Local Storage (Tarea 11).</li>
-        <li>Formulario de alta y edición de productos con validación (Tarea 9).</li>
-        <li>Carga perezosa de rutas (Lazy Loading) para optimización (Tarea 10).</li>
+  <div class="acerca-view container">
+    <div class="card">
+      <h2 class="title">Acerca de MercApp: Catálogo Demo</h2>
+      <p class="description">
+        MercApp es una aplicación de **catálogo de productos y gestión de carrito** construida como demostración de una arquitectura **Full-Stack JavaScript**.
+      </p>
+
+      <h3 class="subtitle">Arquitectura y Tecnologías Clave</h3>
+      <ul class="features-list">
+        <li>
+          <strong>Frontend (Cliente):</strong> Desarrollado con el framework **Vue 3** (Composition API) y **Vite** para un desarrollo rápido y eficiente.
+        </li>
+        <li>
+          <strong>Backend (API REST):</strong> Construido con **Node.js** y el framework **Express**, proveyendo las rutas de la API para productos y categorías.
+        </li>
+        <li>
+          <strong>Base de Datos:</strong> **MongoDB** (NoSQL) es usado como capa de persistencia, con **Mongoose** como ORM para definir los esquemas de datos.
+        </li>
       </ul>
+      
+      <h3 class="subtitle">Funcionalidades Implementadas</h3>
+      <ul class="features-list">
+        <li class="success-item">Catálogo interactivo con filtros y búsqueda.</li>
+        <li class="success-item">Gestión de estado del carrito persistente con Local Storage.</li>
+        <li class="success-item">Formulario de alta de productos con validación.</li>
+        <li class="success-item">Carga perezosa de rutas (Lazy Loading) para optimización.</li>
+      </ul>
+
+      <p class="thank-you">¡Gracias por revisar el proyecto!</p>
     </div>
-    
-    <p class="thanks-msg">¡Gracias por revisar el proyecto!</p>
   </div>
 </template>
 
 <script setup>
-// No requiere lógica
+// No necesita lógica de script compleja
 </script>
 
 <style scoped>
-.about {
+.acerca-view {
+  padding: 30px 20px;
   max-width: 800px;
-  margin: 40px auto;
-  padding: 20px;
+  margin: 0 auto;
+}
+.card {
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.title {
+  color: #2c3e50;
+  border-bottom: 2px solid #42b983;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
   text-align: center;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-h2 {
-  color: #333;
+.description {
+  font-size: 1.1em;
+  line-height: 1.6;
+  color: #34495e;
   margin-bottom: 25px;
-  font-size: 2em;
-  border-bottom: 2px solid #4CAF50;
-  display: inline-block;
-  padding-bottom: 5px;
 }
-.project-info {
-    font-size: 1.1em;
-    color: #555;
-    margin-bottom: 30px;
+.subtitle {
+  color: #34495e;
+  margin-top: 25px;
+  margin-bottom: 10px;
+  font-size: 1.3em;
 }
-.features {
-    text-align: left;
-    margin: 0 auto 30px auto;
-    max-width: 500px;
+.features-list {
+  list-style: none;
+  padding-left: 0;
 }
-.features h3 {
-    color: #4CAF50;
-    margin-bottom: 15px;
+.features-list li {
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.5;
 }
-.features ul {
-    list-style-type: none;
-    padding: 0;
+.success-item::before {
+  content: '✓';
+  color: #42b983;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
-.features li {
-    background: #f0fff0;
-    margin-bottom: 8px;
-    padding: 10px;
-    border-left: 4px solid #4CAF50;
-    font-size: 1em;
-}
-.thanks-msg {
-    font-style: italic;
-    color: #007BFF;
+.thank-you {
+  text-align: center;
+  margin-top: 30px;
+  font-style: italic;
+  color: #42b983;
 }
 </style>

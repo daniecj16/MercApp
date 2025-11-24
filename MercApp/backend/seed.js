@@ -1,114 +1,137 @@
+// backend/seed.js
+
 const mongoose = require('mongoose');
-require('dotenv').config();
+const dotenv = require('dotenv');
 
-const Product = require('./models/Product');
-const Category = require('./models/Category');
+// Asegúrate de que las rutas a tus modelos sean correctas
+const Product = require('./models/Product'); 
+const Category = require('./models/Category'); 
 
-const connectDB = require('./config/db');
+// Asegúrate de que esta ruta a tu configuración de DB sea correcta
+const connectDB = require('./config/db'); 
+
+// Carga las variables de entorno (como MONGO_URI)
+dotenv.config();
+
+// Conecta a la Base de Datos
+connectDB(); 
+
+// Datos de ejemplo para las categorías (Tarea 3)
+const categoriesData = [
+    { name: 'Electrónica' },
+    { name: 'Ropa' },
+    { name: 'Libros' },
+    { name: 'Hogar' },
+    { name: 'Deportes' }
+];
 
 const seedData = async () => {
-    // 1. Conectar a la base de datos
-    await connectDB();
-
     try {
         console.log('Limpiando base de datos...');
-        await Product.deleteMany();
-        await Category.deleteMany();
-
-        // 2. Crear 3-5 Categorías
-        console.log('Creando categorías...');
-        const categoriesData = [
-            { name: 'Electrónica' },
-            { name: 'Ropa y Moda' },
-            { name: 'Hogar' },
-            { name: 'Alimentos' }
-        ];
-
-        const createdCategories = await Category.insertMany(categoriesData);
         
-        // Mapear categorías para facilitar el acceso
-        const catMap = {};
-        createdCategories.forEach(cat => {
-            catMap[cat.name] = cat._id;
-        });
+        // CORRECCIÓN CLAVE: Usar deleteMany({}) para borrar todos los documentos.
+        await Product.deleteMany({}); 
+        await Category.deleteMany({}); 
+        
+        console.log('Base de datos limpia.');
 
-        // 3. Crear 8-12 Productos
-        console.log('Creando productos...');
+        // Insertar categorías (Tarea 3)
+        const insertedCategories = await Category.insertMany(categoriesData);
+        console.log('Categorías insertadas.');
+
+        // Mapear categorías insertadas para usarlas en productos
+        const electronicaId = insertedCategories.find(c => c.name === 'Electrónica')._id;
+        const ropaId = insertedCategories.find(c => c.name === 'Ropa')._id;
+        const librosId = insertedCategories.find(c => c.name === 'Libros')._id;
+        const hogarId = insertedCategories.find(c => c.name === 'Hogar')._id;
+        const deportesId = insertedCategories.find(c => c.name === 'Deportes')._id;
+        
+        // Datos de productos (Tarea 3: 8-12 productos)
         const productsData = [
             {
-                name: 'Smartphone X10',
-                description: 'Teléfono de última generación con cámara 108MP.',
+                name: 'Smartphone Pro 2025',
+                description: 'El último smartphone con cámara de 108MP y pantalla OLED.',
                 price: 799.99,
-                imageUrl: 'https://picsum.photos/400/400?random=1',
-                categoryId: catMap['Electrónica'],
+                // Imagen de Pexels: Teléfono moderno
+                imageUrl: 'https://images.pexels.com/photos/4006152/pexels-photo-4006152.jpeg?auto=compress&cs=tinysrgb&w=800', 
+                categoryId: electronicaId, 
                 stock: 15
             },
             {
-                name: 'Cargador Rápido USB-C',
-                description: 'Carga tu dispositivo en minutos. 65W.',
-                price: 25.50,
-                imageUrl: 'https://picsum.photos/400/400?random=2',
-                categoryId: catMap['Electrónica'],
+                name: 'Camiseta de Algodón Orgánico',
+                description: 'Camiseta básica de algodón 100% orgánico, color blanco.',
+                price: 19.50,
+                // Imagen de Pexels: Ropa
+                imageUrl: 'https://images.pexels.com/photos/428338/pexels-photo-428338.jpeg?auto=compress&cs=tinysrgb&w=800', 
+                categoryId: ropaId, 
                 stock: 50
             },
             {
-                name: 'Camiseta Algodón Orgánico',
-                description: 'Suave y cómoda, 100% algodón orgánico.',
-                price: 19.95,
-                imageUrl: 'https://picsum.photos/400/400?random=3',
-                categoryId: catMap['Ropa y Moda'],
-                stock: 30
+                name: 'El Gran Libro de Vue',
+                description: 'Guía completa para desarrollo frontend con Vue 3 y JavaScript.',
+                price: 45.00,
+                // Imagen de Pexels: Libros
+                imageUrl: 'https://images.pexels.com/photos/159792/bible-old-book-book-pages-old-fashioned-159792.jpeg?auto=compress&cs=tinysrgb&w=800', 
+                categoryId: librosId, 
+                stock: 8
             },
             {
-                name: 'Jeans Slim Fit',
-                description: 'Ajuste perfecto y duradero.',
-                price: 49.99,
-                imageUrl: 'https://picsum.photos/400/400?random=4',
-                categoryId: catMap['Ropa y Moda'],
-                stock: 20
+                name: 'Balón de Fútbol Profesional',
+                description: 'Balón oficial de cuero sintético para juegos de alto rendimiento.',
+                price: 65.99,
+                // Imagen de Pexels: Balón
+                imageUrl: 'https://images.pexels.com/photos/46798/the-ball-stadion-football-the-pitch-46798.jpeg?auto=compress&cs=tinysrgb&w=800', 
+                categoryId: deportesId, 
+                stock: 4
+            },
+             {
+                name: 'Auriculares Inalámbricos Premium',
+                description: 'Cancelación de ruido activa y 30 horas de batería.',
+                price: 129.00,
+                // Imagen de Pexels: Auriculares
+                imageUrl: 'https://images.pexels.com/photos/3780681/pexels-photo-3780681.jpeg?auto=compress&cs=tinysrgb&w=800', 
+                categoryId: electronicaId, 
+                stock: 22
             },
             {
-                name: 'Set de Ollas Antiadherentes',
-                description: '7 piezas. Ideal para cualquier cocina moderna.',
-                price: 120.00,
-                imageUrl: 'https://picsum.photos/400/400?random=5',
-                categoryId: catMap['Hogar'],
+                name: 'Sudadera con Capucha (Unisex)',
+                description: 'Sudadera cómoda y abrigadora, ideal para el frío.',
+                price: 55.00,
+                // Imagen de Pexels: Ropa
+                imageUrl: 'https://images.pexels.com/photos/159844/cellular-phone-flea-market-sale-159844.jpeg?auto=compress&cs=tinysrgb&w=800', 
+                categoryId: ropaId, 
+                stock: 0 
+            },
+            {
+                name: 'Vajilla de Cerámica (Set 4 personas)',
+                description: 'Set de vajilla elegante, resistente para uso diario.',
+                price: 85.00,
+                // Imagen de Pexels: Hogar
+                imageUrl: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800',
+                categoryId: hogarId,
+                stock: 18
+            },
+            {
+                name: 'Esterilla de Yoga Profesional',
+                description: 'Esterilla antideslizante de alta densidad para yoga y fitness.',
+                price: 35.50,
+                // Imagen de Pexels: Deportes
+                imageUrl: 'https://images.pexels.com/photos/4079867/pexels-photo-4079867.jpeg?auto=compress&cs=tinysrgb&w=800',
+                categoryId: deportesId,
                 stock: 10
-            },
-            {
-                name: 'Lámpara de Escritorio LED',
-                description: 'Brillo ajustable, luz cálida.',
-                price: 35.00,
-                imageUrl: 'https://picsum.photos/400/400?random=6',
-                categoryId: catMap['Hogar'],
-                stock: 40
-            },
-            {
-                name: 'Café Grano Tostado (1kg)',
-                description: 'Arábica 100%, tueste medio.',
-                price: 15.75,
-                imageUrl: 'https://picsum.photos/400/400?random=7',
-                categoryId: catMap['Alimentos'],
-                stock: 100
-            },
-            {
-                name: 'Aceite de Oliva Extra Virgen',
-                description: 'Prensa en frío, sabor intenso.',
-                price: 12.90,
-                imageUrl: 'https://picsum.photos/400/400?random=8',
-                categoryId: catMap['Alimentos'],
-                stock: 60
             }
         ];
-
+        
         await Product.insertMany(productsData);
+        console.log('Productos insertados. ¡Datos cargados con éxito! 🎉');
 
-        console.log('✅ Base de datos poblada exitosamente.');
-    } catch (err) {
-        console.error('❌ Error al poblar la base de datos:', err);
-        process.exit(1);
-    } finally {
+        // Cierra la conexión a la base de datos
+        mongoose.connection.close(); 
+        
+    } catch (error) {
+        console.error(`Error al poblar la base de datos: ${error.message}`);
         mongoose.connection.close();
+        process.exit(1);
     }
 };
 

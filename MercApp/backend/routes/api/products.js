@@ -1,26 +1,30 @@
+// backend/routes/api/products.js
+
 const express = require('express');
 const router = express.Router();
+// Importamos el controlador que contiene toda la lógica de negocio
 const productController = require('../../controllers/productController');
-const multer = require('multer');
 
-// Configuración de Multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
-  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
-});
-const upload = multer({ storage });
+// Rutas de API para /api/products
 
-// Rutas de productos (CRUD COMPLETO)
-router.get('/', productController.getProducts); // GET all
-router.get('/:id', productController.getProductById); // GET by ID
+// 1. OBTENER TODOS LOS PRODUCTOS (GET /api/products)
+// Tarea 4/6: Carga el catálogo principal.
+router.get('/', productController.getAllProducts);
 
-// POST: Usamos el middleware de multer para la imagen
-router.post('/', upload.single('image'), productController.createProduct);
+// 2. CREAR NUEVO PRODUCTO (POST /api/products)
+// Tarea 9: Crea un producto nuevo desde el formulario.
+router.post('/', productController.createProduct);
 
-// PUT/PATCH: Usamos el middleware de multer para la imagen
-router.put('/:id', upload.single('image'), productController.updateProduct);
+// 3. OBTENER PRODUCTO POR ID (GET /api/products/:id)
+// Tarea 8: Carga los detalles del producto.
+router.get('/:id', productController.getProductById);
 
-// DELETE
+// 4. ACTUALIZAR PRODUCTO POR ID (PUT/PATCH /api/products/:id)
+// Tarea 9: Edita un producto existente.
+router.put('/:id', productController.updateProduct);
+
+// 5. ELIMINAR PRODUCTO POR ID (DELETE /api/products/:id)
+// Tarea 9: Elimina un producto.
 router.delete('/:id', productController.deleteProduct);
 
 module.exports = router;
