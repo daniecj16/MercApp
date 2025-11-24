@@ -4,8 +4,8 @@
 
 | Campo | Detalle |
 | :--- | :--- |
-| **Nombre del Estudiante** | **[Nombre Completo del Estudiante Aquí]** |
-| **Asignatura** | **[Nombre de la Asignatura Aquí]** |
+| **Nombre del Estudiante** | Daniel Cruz |
+| **Asignatura** | Aplicaciones Web |
 | **Proyecto** | MercApp (Single Page Application - SPA) |
 | **Tecnologías Frontend** | Vue 3 (**Composition API**), Vite, Vue Router |
 | **Tecnologías Backend** | Node.js, Express, MongoDB, Mongoose |
