@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 
 // URL base de tu API REST del backend (Asegúrate de que el puerto sea correcto)
-const API_BASE_URL = 'http://localhost:3000/api'; 
+const API_URL = import.meta.env.VITE_API_URL;
 
 /**
  * Composable genérico para realizar peticiones HTTP a la API.
