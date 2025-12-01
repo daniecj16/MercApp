@@ -29,21 +29,17 @@ const allowedOrigins = [
     process.env.FRONTEND_URL  // URL de producción (Netlify) inyectada por Railway
 ];
 
-const corsOptions = {
-    origin: (origin, callback) => {
-        // Permite si el origen está en la lista o si no hay origen (ej: Postman, CURL)
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            // Rechaza el acceso
-            callback(new Error('❌ No permitido por las políticas de CORS.'));
-        }
-    },
-    // CLAVE: Permite todos los métodos necesarios para el CRUD y el preflight OPTIONS
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS", 
-    credentials: true,
-    optionsSuccessStatus: 204 // Respuesta para el preflight OPTIONS
-};
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // Postman y curl
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error("CORS no permitido"));
+  },
+  credentials: true,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS"
+}));
 
 app.use(cors({
   origin: allowedOrigins,
