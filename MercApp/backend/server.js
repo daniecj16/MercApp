@@ -45,7 +45,11 @@ const corsOptions = {
     optionsSuccessStatus: 204 // Respuesta para el preflight OPTIONS
 };
 
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}));
 
 
 // 4. RUTAS PRINCIPALES DE LA API
