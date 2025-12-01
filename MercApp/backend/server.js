@@ -26,8 +26,10 @@ app.use(express.json());
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://merc-app-git-main-daniecj16s-projects.vercel.app/" // ← TU FRONTEND EN PRODUCCIÓN
+  "https://merc-app-git-main-daniecj16s-projects.vercel.app",
+  "https://merc-m3cf41hdk-daniecj16s-projects.vercel.app"
 ];
+
 
 app.use((req, res, next) => {
   console.log("🌐 Origin recibido:", req.headers.origin);
