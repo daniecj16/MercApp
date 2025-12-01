@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h2>Catálogo de Productos</h2>
+    <h2 class="title">🛒 Catálogo de Productos</h2>
     
     <div class="controls">
       <input 
@@ -18,8 +18,8 @@
       </select>
     </div>
 
-    <p v-if="loading">Cargando productos...</p>
-    <p v-else-if="error" class="error-msg">Error al cargar productos: {{ error }}</p>
+    <p v-if="loading" class="loading-msg">Cargando productos...</p>
+    <p v-else-if="error" class="error-msg">❌ Error al cargar productos: {{ error }}</p>
 
     <div v-else class="product-grid">
       <ProductCard 
@@ -30,7 +30,7 @@
       />
       
       <p v-if="filteredProducts.length === 0" class="no-results">
-        No se encontraron productos que coincidan con los filtros.
+        😢 No se encontraron productos que coincidan con los filtros.
       </p>
     </div>
   </div>
@@ -38,24 +38,25 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+// Asumo la existencia de estos composables en '@/composables/'
 import { useApi } from '@/composables/useApi'; 
 import { useCart } from '@/composables/useCart'; 
 import ProductCard from '@/components/ProductCard.vue'; 
 
-// --- Estado local para filtros (Tarea 6) ---
+// --- 1. Estado local para filtros (Tarea 6) ---
 const searchText = ref('');
 const selectedCategory = ref('');
 
-// --- Consumo de API (Tarea 8) ---
+// --- 2. Consumo de API usando useApi (Tarea 8) ---
 // Obtener productos (GET /api/products)
 const { data: products, loading, error, fetchData: fetchProducts } = useApi('/products');
 // Obtener categorías (GET /api/categories)
 const { data: categories, fetchData: fetchCategories } = useApi('/categories');
 
-// --- Lógica del Carrito (Tarea 11) ---
+// --- 3. Lógica del Carrito (Tarea 11) ---
 const { addItem } = useCart();
 
-// --- Tarea 6: Propiedad Computada (Filtrado y Búsqueda) ---
+// --- 4. Propiedad Computada (Reactividad y Filtros) ---
 const filteredProducts = computed(() => {
   if (!products.value) return [];
   
@@ -68,74 +69,67 @@ const filteredProducts = computed(() => {
     
     // 2. Filtro por Categoría
     const matchesCategory = selectedCategory.value === '' || 
-                            // Verifica si el ID de la categoría del producto coincide con el filtro
+                            // Compara el ID del filtro con el ID referenciado en el producto
                             (product.categoryId && product.categoryId._id === selectedCategory.value);
     
-    return matchesSearch && matchesCategory;
+    return matchesSearch && matchesCategory; // Debe cumplir ambas condiciones
   });
 });
 
-// --- Lógica de Montaje y Carga Inicial ---
+// --- 5. Lógica de Montaje y Carga Inicial ---
 onMounted(() => {
-  // Cargar productos y categorías al iniciar la vista
   fetchProducts();
   fetchCategories();
 });
 
-// --- Manejo de Evento de Componente Hijo (Tarea 7: Comunicación por eventos) ---
+// --- 6. Manejo de Evento de Componente Hijo ---
 const handleAddToCart = (product) => {
-  addItem(product); // Llama a la lógica del carrito
+  addItem(product); // Llama a la lógica del carrito (useCart)
   console.log(`Producto ${product.name} añadido al carrito.`);
 };
 </script>
 
 <style scoped>
+/* Estilos basados en tu referencia, ajustados para claridad */
 .home {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 20px;
+}
+.title {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
 }
 .controls {
   display: flex;
-  flex-wrap: wrap; /* Permite que los elementos se ajusten en pantallas pequeñas */
+  flex-wrap: wrap; 
   gap: 20px;
   margin-bottom: 30px;
   padding: 15px;
-  background-color: #f8f8f8;
+  background-color: #f0f0f0;
   border-radius: 8px;
 }
-.search-input {
+.search-input, .category-select {
   flex-grow: 1;
-  min-width: 200px; /* Asegura que no se haga demasiado pequeño */
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-.category-select {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  cursor: pointer;
-  min-width: 150px;
 }
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 25px;
 }
-.error-msg {
-    color: #CC0000;
-    font-weight: bold;
-    text-align: center;
-    padding: 20px;
-    border: 1px solid #FFCCCC;
-    background-color: #FFF0F0;
-    border-radius: 5px;
+.loading-msg, .error-msg, .no-results {
+  text-align: center;
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 4px;
 }
-.no-results {
-    grid-column: 1 / -1; /* Ocupa todo el ancho de la cuadrícula */
-    text-align: center;
-    padding: 30px;
-    color: #666;
-    font-size: 1.1em;
+.error-msg {
+  color: #CC0000;
+  background-color: #FFF0F0;
+  border: 1px solid #FFCCCC;
 }
 </style>

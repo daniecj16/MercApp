@@ -2,45 +2,53 @@
 
 const mongoose = require('mongoose');
 
-// 💡 Tarea 1: Modelo Product (id, name, description, price, imageUrl, categoryId, stock)
-const productSchema = new mongoose.Schema({
+const productSchema = mongoose.Schema({
+    // Nombre del producto (obligatorio)
     name: {
         type: String,
-        required: true,
-        trim: true
+        required: [true, 'El nombre del producto es obligatorio'],
+        trim: true, // Elimina espacios en blanco al inicio/final
+        maxlength: [100, 'El nombre no puede exceder los 100 caracteres']
     },
+    // Descripción completa del producto (obligatorio)
     description: {
         type: String,
-        required: true
+        required: [true, 'La descripción es obligatoria'],
     },
+    // Precio del producto (obligatorio y debe ser positivo)
     price: {
         type: Number,
-        required: true,
-        min: 0.01 // Tarea 9: Precio numérico > 0
+        required: [true, 'El precio es obligatorio'],
+        default: 0,
+        min: [0, 'El precio debe ser un número positivo']
     },
-    imageUrl: {
-        type: String,
-        default: '/placeholder.jpg' // URL de imagen válida
-    },
-    // Referencia a la categoría (Tarea 1)
-    categoryId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category', // Nombre del modelo de Categoría. ¡Debe coincidir con la exportación de Category.js!
-        required: true // Tarea 9: Categoría obligatoria
-    },
+    // Stock/Inventario (obligatorio y no negativo)
     stock: {
         type: Number,
-        required: true,
-        min: 0, // Tarea 9: Stock >= 0
-        default: 0
+        required: [true, 'El stock es obligatorio'],
+        default: 0,
+        min: [0, 'El stock no puede ser negativo']
     },
-    // Opcional: Timestamp de creación y actualización
+    // URL de la imagen (opcional)
+    imageUrl: {
+        type: String,
+        default: 'no-image-url.jpg'
+    },
+    // Referencia a la Categoría (CLAVE: Relación con otro Modelo)
+    // Asumimos que tienes un modelo Category ya definido.
+    categoryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category', // Nombre del modelo de la colección de Categorías
+        required: [true, 'La categoría es obligatoria']
+    },
+    // Fecha de creación del registro
     createdAt: {
         type: Date,
         default: Date.now
     }
 });
 
-// ✅ EXPORTACIÓN CLAVE: Exportar el modelo compilado
-// Esto es lo que permite que seed.js y productController usen métodos como .find() y .deleteMany({})
-module.exports = mongoose.model('Product', productSchema);
+// Crear y exportar el modelo a partir del esquema
+const Product = mongoose.model('Product', productSchema);
+
+module.exports = Product;
